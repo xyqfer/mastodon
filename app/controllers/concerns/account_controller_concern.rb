@@ -46,4 +46,14 @@ module AccountControllerConcern
   def webfinger_account_url
     webfinger_url(resource: @account.to_webfinger_s)
   end
+
+  def temporary_suspension_response
+    expires_in(3.minutes, public: true)
+    set_instance_presenter
+
+    respond_to do |format|
+      format.html { render 'accounts/suspended', status: 410 }
+      format.rss  { gone }
+    end
+  end
 end

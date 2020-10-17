@@ -57,12 +57,18 @@ class ActivityPub::OutboxesController < ActivityPub::BaseController
   def set_statuses
     return unless page_requested?
 
-    @statuses = cache_collection_paginated_by_id(
-      @account.statuses.permitted_for(@account, signed_request_account),
-      Status,
-      LIMIT,
-      params_slice(:max_id, :min_id, :since_id)
-    )
+    @statuses = begin
+      if @account.suspended?
+        []
+      else
+        cache_collection_paginated_by_id(
+          @account.statuses.permitted_for(@account, signed_request_account),
+          Status,
+          LIMIT,
+          params_slice(:max_id, :min_id, :since_id)
+        )
+      end
+    end
   end
 
   def page_requested?

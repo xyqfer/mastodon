@@ -29,6 +29,20 @@ module AccountOwnedConcern
   end
 
   def check_account_suspension
-    expires_in(3.minutes, public: true) && gone if @account.suspended?
+    if @account.suspended_permanently?
+      permanent_suspension_response
+    elsif @account.suspended? && request.format != :json
+      temporary_suspension_response
+    end
+  end
+
+  def permanent_suspension_response
+    expires_in(3.minutes, public: true)
+    gone
+  end
+
+  def temporary_suspension_response
+    expires_in(3.minutes, public: true)
+    gone
   end
 end

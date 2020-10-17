@@ -83,6 +83,7 @@ en:
       bot: Bot
       group: Group
       moderator: Mod
+    suspended: This account has been suspended
     unavailable: Profile unavailable
     unfollow: Unfollow
   admin:
